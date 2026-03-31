@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Details - Library Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: #f5f6fa;
+            min-height: 100vh;
+        }
+        
+        .main-content {
+            margin-left: 250px;
+            padding: 30px;
+        }
+        
+        .breadcrumb {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .breadcrumb a {
+            color: #2ecc71;
+            text-decoration: none;
+        }
+        
+        .breadcrumb span {
+            color: #7f8c8d;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 30px;
+        }
+        
+        .page-header h1 {
+            color: #2c3e50;
+            font-size: 1.8rem;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        .btn span { margin-right: 6px; }
+        
+        .btn-primary { background: #2ecc71; color: #fff; }
+        .btn-primary:hover { background: #27ae60; }
+        
+        .btn-warning { background: #f39c12; color: #fff; }
+        .btn-warning:hover { background: #e67e22; }
+        
+        .btn-danger { background: #e74c3c; color: #fff; }
+        .btn-danger:hover { background: #c0392b; }
+        
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
+        }
+        
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        
+        .card-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-header h2 {
+            color: #2c3e50;
+            font-size: 1.1rem;
+        }
+        
+        .card-body {
+            padding: 25px;
+        }
+        
+        .user-profile {
+            text-align: center;
+            padding: 40px;
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            color: #fff;
+        }
+        
+        .user-avatar-large {
+            width: 100px;
+            height: 100px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            margin: 0 auto 20px;
+        }
+        
+        .user-name {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+        
+        .user-email {
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+        
+        .user-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            margin-top: 20px;
+            border-radius: 10px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-item h4 {
+            font-size: 1.5rem;
+        }
+        
+        .stat-item p {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+        
+        .detail-row {
+            display: flex;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+        
+        .detail-label {
+            width: 140px;
+            color: #7f8c8d;
+            font-weight: 500;
+        }
+        
+        .detail-value {
+            flex: 1;
+            color: #2c3e50;
+        }
+        
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .status-badge.active { background: #d4edda; color: #155724; }
+        .status-badge.inactive { background: #f8d7da; color: #721c24; }
+        .status-badge.deactivated { background: #e2e3e5; color: #383d41; }
+        
+        .borrowed-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .borrowed-table th,
+        .borrowed-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .borrowed-table th {
+            color: #7f8c8d;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        
+        .badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+        
+        .badge-warning { background: #fff3cd; color: #856404; }
+        .badge-success { background: #d4edda; color: #155724; }
+        .badge-danger { background: #f8d7da; color: #721c24; }
+        
+        @media (max-width: 992px) {
+            .details-grid { grid-template-columns: 1fr; }
+        }
+        
+        @media (max-width: 768px) {
+            .main-content { margin-left: 0; padding: 20px; }
+            .page-header { flex-direction: column; gap: 15px; }
+        }
+    </style>
+</head>
+<body>
+    {% include 'Sidebar.html' %}
+    
+    <main class="main-content">
+        <div class="breadcrumb">
+            <a href="{% url 'user_table' %}">Users</a>
+            <span>›</span>
+            <span>{{ user.full_name|default:"User Details" }}</span>
+        </div>
+        
+        <div class="page-header">
+            <h1>👤 User Details</h1>
+            <div class="header-actions">
+                <a href="{% url 'user_edit' user.id %}" class="btn btn-warning"><span>✏️</span> Edit</a>
+                <a href="{% url 'user_delete' user.id %}" class="btn btn-danger"><span>🗑️</span> Delete</a>
+            </div>
+        </div>
+        
+        <div class="details-grid">
+            <div class="card">
+                <div class="user-profile">
+                    <div class="user-avatar-large">👤</div>
+                    <h2 class="user-name">{{ user.full_name|default:"User Name" }}</h2>
+                    <p class="user-email">{{ user.email|default:"user@example.com" }}</p>
+                    
+                    <div class="user-stats">
+                        <div class="stat-item">
+                            <h4>{{ books_currently|default:"0" }}</h4>
+                            <p>Currently Borrowed</p>
+                        </div>
+                        <div class="stat-item">
+                            <h4>{{ books_total|default:"0" }}</h4>
+                            <p>Total Borrowed</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2>User Information</h2>
+                </div>
+                <div class="card-body">
+                    <div class="detail-row">
+                        <span class="detail-label">User ID</span>
+                        <span class="detail-value">#{{ user.id|default:"N/A" }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Full Name</span>
+                        <span class="detail-value">{{ user.full_name|default:"N/A" }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Email</span>
+                        <span class="detail-value">{{ user.email|default:"N/A" }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Phone</span>
+                        <span class="detail-value">{{ user.phone_no|default:"N/A" }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Address</span>
+                        <span class="detail-value">{{ user.address|default:"Not provided" }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Status</span>
+                        <span class="detail-value">
+                            {% if user.status == 1 %}
+                            <span class="status-badge active">Active</span>
+                            {% elif user.status == 0 %}
+                            <span class="status-badge inactive">Inactive</span>
+                            {% else %}
+                            <span class="status-badge deactivated">Deactivated</span>
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card" style="margin-top: 20px;">
+            <div class="card-header">
+                <h2>Borrowed Books</h2>
+                <a href="{% url 'records_borrow' %}?user={{ user.id }}" class="btn btn-primary"><span>📤</span> Issue Book</a>
+            </div>
+            <div class="card-body">
+                <table class="borrowed-table">
+                    <thead>
+                        <tr>
+                            <th>Book</th>
+                            <th>Borrowed Date</th>
+                            <th>Due Date</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in borrowed_books %}
+                        <tr>
+                            <td>{{ record.book }}</td>
+                            <td>{{ record.borrowed_date }}</td>
+                            <td>{{ record.due_date }}</td>
+                            <td>
+                                {% if record.status == 'overdue' %}
+                                <span class="badge badge-danger">Overdue</span>
+                                {% elif record.status == 'borrowed' %}
+                                <span class="badge badge-warning">Borrowed</span>
+                                {% else %}
+                                <span class="badge badge-success">Returned</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if record.status != 'returned' %}
+                                <a href="/return/{{ record.id }}/" class="btn btn-primary" style="padding: 5px 12px; font-size: 0.8rem;">Return</a>
+                                {% else %}
+                                -
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" style="text-align: center; color: #7f8c8d; padding: 30px;">
+                                No borrowed books
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
