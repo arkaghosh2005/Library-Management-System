@@ -1,0 +1,2 @@
+1. total_users accepts data from total_users variable.
+2. we are returning a context dictionary, where the keys are the labels from html

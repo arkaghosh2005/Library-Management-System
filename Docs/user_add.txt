@@ -1,0 +1,16 @@
+<div class="alert alert-{{ message.tags }}">{{ message }}</div>
+
+->WHAT MESSAGE
+
+1. request is an dictionary, we are using .get("label") to get the data
+2. we change the form.py 
+2. userdataform 
+3. cleaned_data is the data which has been validated & cleaned using is_vlid() method. It's dict with all the form fields and thier values, like requests.POST.
+4. ValidationError is django's way of saying invalid field, catched during is_valid() check
+5. is_valid() runs the validation routine:
+    1. first it runs built in validations like @ for email, etc.
+    2. checks the form class for clean_<fieldName> functions, if present then runs those.
+    For custom validations.
+    3. finally clean() is run, checks the whole form for dependencies b/t multiple field, like pw and confirm pw.
+-> if errors are found at any time, then they are stored in forms.errors
+

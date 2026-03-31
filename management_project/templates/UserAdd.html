@@ -252,7 +252,7 @@
                         <div class="form-group">
                             <label for="phone_no">Phone Number <span class="required">*</span></label>
                             <input type="tel" id="phone_no" name="phone_no" class="form-control" 
-                                   placeholder="+977 98XXXXXXXX" value="{{ form.phone_no.value|default:'' }}" required>
+                                   placeholder="98XXXXXXXX" value="{{ form.phone_no.value|default:'' }}" required>
                             {% if form.phone_no.errors %}
                             <span class="error-message">{{ form.phone_no.errors.0 }}</span>
                             {% endif %}
@@ -264,15 +264,6 @@
                         <textarea id="address" name="address" class="form-control" 
                                   placeholder="Enter user's address (optional)">{{ form.address.value|default:'' }}</textarea>
                         <span class="form-hint">Complete address including city and district</span>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="status">Status</label>
-                        <select id="status" name="status" class="form-control">
-                            <option value="1" {% if form.status.value == 1 %}selected{% endif %}>Active</option>
-                            <option value="0" {% if form.status.value == 0 %}selected{% endif %}>Inactive</option>
-                            <option value="5" {% if form.status.value == 5 %}selected{% endif %}>Deactivated</option>
-                        </select>
                     </div>
                     
                     <div class="form-actions">
