@@ -14,3 +14,4 @@
     3. finally clean() is run, checks the whole form for dependencies b/t multiple field, like pw and confirm pw.
 -> if errors are found at any time, then they are stored in forms.errors
 
+6. {"form":form}, it sends the form with errors to the template, so that we can show the error messages in the template

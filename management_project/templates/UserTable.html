@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,29 +12,29 @@
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
+
         body {
             background: #f5f6fa;
             min-height: 100vh;
         }
-        
+
         .main-content {
             margin-left: 250px;
             padding: 30px;
         }
-        
+
         .page-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 30px;
         }
-        
+
         .page-header h1 {
             color: #2c3e50;
             font-size: 1.8rem;
         }
-        
+
         .btn {
             padding: 12px 24px;
             border: none;
@@ -45,31 +46,31 @@
             align-items: center;
             transition: all 0.3s ease;
         }
-        
+
         .btn-primary {
             background: #2ecc71;
             color: #fff;
         }
-        
+
         .btn-primary:hover {
             background: #27ae60;
         }
-        
+
         .btn span {
             margin-right: 8px;
         }
-        
+
         .search-filter {
             display: flex;
             gap: 15px;
             margin-bottom: 20px;
         }
-        
+
         .search-box {
             flex: 1;
             position: relative;
         }
-        
+
         .search-box input {
             width: 100%;
             padding: 12px 20px 12px 45px;
@@ -79,11 +80,11 @@
             outline: none;
             transition: border-color 0.3s ease;
         }
-        
+
         .search-box input:focus {
             border-color: #2ecc71;
         }
-        
+
         .search-box::before {
             content: "🔍";
             position: absolute;
@@ -91,7 +92,7 @@
             top: 50%;
             transform: translateY(-50%);
         }
-        
+
         .filter-select {
             padding: 12px 20px;
             border: 1px solid #ddd;
@@ -101,26 +102,26 @@
             background: #fff;
             min-width: 150px;
         }
-        
+
         .card {
             background: #fff;
             border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
             overflow: hidden;
         }
-        
+
         .data-table {
             width: 100%;
             border-collapse: collapse;
         }
-        
+
         .data-table th,
         .data-table td {
             padding: 15px 20px;
             text-align: left;
             border-bottom: 1px solid #eee;
         }
-        
+
         .data-table th {
             background: #f8f9fa;
             color: #7f8c8d;
@@ -128,16 +129,16 @@
             font-size: 0.85rem;
             text-transform: uppercase;
         }
-        
+
         .data-table tr:hover {
             background: #f8f9fa;
         }
-        
+
         .user-info {
             display: flex;
             align-items: center;
         }
-        
+
         .user-avatar {
             width: 45px;
             height: 45px;
@@ -149,34 +150,45 @@
             margin-right: 15px;
             font-size: 1.2rem;
         }
-        
+
         .user-details h4 {
             color: #2c3e50;
             margin-bottom: 3px;
         }
-        
+
         .user-details span {
             color: #7f8c8d;
             font-size: 0.85rem;
         }
-        
+
         .status-badge {
             padding: 5px 12px;
             border-radius: 20px;
             font-size: 0.8rem;
             font-weight: 500;
         }
-        
-        .status-badge.active { background: #d4edda; color: #155724; }
-        .status-badge.inactive { background: #f8d7da; color: #721c24; }
-        .status-badge.deactivated { background: #e2e3e5; color: #383d41; }
-        
+
+        .status-badge.active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-badge.inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-badge.deactivated {
+            background: #e2e3e5;
+            color: #383d41;
+        }
+
         .books-borrowed {
             display: flex;
             align-items: center;
             gap: 8px;
         }
-        
+
         .books-count {
             background: rgba(52, 152, 219, 0.15);
             color: #3498db;
@@ -185,12 +197,12 @@
             font-size: 0.85rem;
             font-weight: 600;
         }
-        
+
         .action-btns {
             display: flex;
             gap: 8px;
         }
-        
+
         .action-btn {
             width: 35px;
             height: 35px;
@@ -203,22 +215,33 @@
             text-decoration: none;
             transition: all 0.3s ease;
         }
-        
-        .action-btn.view { background: rgba(52, 152, 219, 0.15); color: #3498db; }
-        .action-btn.edit { background: rgba(241, 196, 15, 0.15); color: #f39c12; }
-        .action-btn.delete { background: rgba(231, 76, 60, 0.15); color: #e74c3c; }
-        
+
+        .action-btn.view {
+            background: rgba(52, 152, 219, 0.15);
+            color: #3498db;
+        }
+
+        .action-btn.edit {
+            background: rgba(241, 196, 15, 0.15);
+            color: #f39c12;
+        }
+
+        .action-btn.delete {
+            background: rgba(231, 76, 60, 0.15);
+            color: #e74c3c;
+        }
+
         .action-btn:hover {
             transform: scale(1.1);
         }
-        
+
         .pagination {
             display: flex;
             justify-content: center;
             gap: 5px;
             padding: 20px;
         }
-        
+
         .pagination a {
             padding: 8px 15px;
             border: 1px solid #ddd;
@@ -227,36 +250,36 @@
             color: #2c3e50;
             transition: all 0.3s ease;
         }
-        
+
         .pagination a:hover,
         .pagination a.active {
             background: #2ecc71;
             color: #fff;
             border-color: #2ecc71;
         }
-        
+
         .empty-state {
             text-align: center;
             padding: 60px 20px;
             color: #7f8c8d;
         }
-        
+
         .empty-state span {
             font-size: 4rem;
             display: block;
             margin-bottom: 20px;
         }
-        
+
         @media (max-width: 768px) {
             .main-content {
                 margin-left: 0;
                 padding: 20px;
             }
-            
+
             .search-filter {
                 flex-direction: column;
             }
-            
+
             .page-header {
                 flex-direction: column;
                 gap: 15px;
@@ -265,9 +288,10 @@
         }
     </style>
 </head>
+
 <body>
     {% include 'Sidebar.html' %}
-    
+
     <main class="main-content">
         <div class="page-header">
             <h1>👥 All Users</h1>
@@ -275,24 +299,24 @@
                 <span>➕</span> Add New User
             </a>
         </div>
-        
-        <div class="search-filter">
+
+        <form method="GET" action="{% url 'user_table' %}" class="search-filter">
             <div class="search-box">
-                <input type="text" placeholder="Search users by name, email...">
+                <input type="text" name="name" placeholder="Search by name" value="{{ name_query|default:'' }}">
             </div>
-            <select class="filter-select">
-                <option value="">All Status</option>
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-                <option value="deactivated">Deactivated</option>
-            </select>
-        </div>
-        
+
+            <div class="search-box">
+                <input type="text" name="email" placeholder="Search by email" value="{{ email_query|default:'' }}">
+            </div>
+
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+
         <div class="card">
             <table class="data-table">
                 <thead>
                     <tr>
-                        <th>User Name</th>
+                        <th>Full Name</th>
                         <th>Phone</th>
                         <th>Email</th>
                         <th>Address</th>
@@ -302,7 +326,7 @@
                 <tbody>
                     {% for user in users %}
                     <tr>
-                        <td>{{ user.user_name }}</td>
+                        <td>{{ user.full_name }}</td>
                         <td>{{ user.phone_no }}</td>
                         <td>{{ user.email }}</td>
                         <td>{{ user.address|default:"-"|truncatechars:30 }}</td>
@@ -310,7 +334,8 @@
                             <div class="action-btns">
                                 <a href="{% url 'user_details' user.id %}" class="action-btn view" title="View">👁️</a>
                                 <a href="{% url 'user_edit' user.id %}" class="action-btn edit" title="Edit">✏️</a>
-                                <a href="{% url 'user_delete' user.id %}" class="action-btn delete" title="Delete">🗑️</a>
+                                <a href="{% url 'user_delete' user.id %}" class="action-btn delete"
+                                    title="Delete">🗑️</a>
                             </div>
                         </td>
                     </tr>
@@ -327,7 +352,7 @@
                     {% endfor %}
                 </tbody>
             </table>
-            
+
             {% if users %}
             <div class="pagination">
                 <a href="#">&laquo;</a>
@@ -340,4 +365,5 @@
         </div>
     </main>
 </body>
+
 </html>

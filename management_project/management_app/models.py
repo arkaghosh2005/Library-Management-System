@@ -6,6 +6,15 @@ ISSUE_STATUS = [
     ('issued', 'Issued'),  
     ('returned', 'Returned'),
 ]
+BOOK_TYPE = [
+    ('Fiction', 'Fiction'),
+    ('Non-Fiction', 'Non-Fiction'),
+    ('Science', 'Science'),
+    ('History', 'History'),
+    ('Biography', 'Biography'),
+    ('Technology', 'Technology'),
+    ('Literature', 'Literature'),
+    ('Other','Other')]
 
 class userData(models.Model):
     full_name = models.CharField(max_length=150)
@@ -16,9 +25,14 @@ class userData(models.Model):
 class bookData(models.Model):
     book_name = models.CharField(max_length=200)
     author_name = models.CharField(max_length=150)
-    book_type = models.CharField(max_length=100)
+    book_type = models.CharField(max_length=20, choices=BOOK_TYPE, null=False)
     stock = models.PositiveIntegerField(default=0)
     available = models.PositiveIntegerField(default=0)
+
+    def save(self, *args, **kwargs):
+        if self._state.adding and self.available == 0:  #_state.adding is true when new instance, then false 
+            self.available = self.stock
+        super().save(*args, **kwargs)
 
 class issueBookData(models.Model):
     user = models.ForeignKey(userData, on_delete=models.CASCADE)

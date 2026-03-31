@@ -1,0 +1,4 @@
+1. changed the search.
+2. added Q, allows complx query
+3. since each UserDataForm is an instance object, we check if pk- primary key exists then, we remove them from duplicate check list
+4. in form.py re study clean_email

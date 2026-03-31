@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
+from django.db.models import Q  
 from .form import *
 from .models import *
-
+# Q allows building complex queries using logical operators like AND, OR, NOT, etc. It is used to filter data based on multiple conditions.
 
 def dashboard(request):
     total_users = userData.objects.count()
@@ -17,28 +18,55 @@ def dashboard(request):
     
 
 def book_table(request):
-    return render(request, 'BookTable.html')
+    # TODO: search and filter functionality
+    books = bookData.objects.all()
+    return render(request, 'BookTable.html', {'books': books})
 
 
 def book_add(request):
-    return render(request, 'BookAdd.html')
+    if request.method=='POST':
+        form=bookDataForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("book_table")
+    else:
+        form = bookDataForm()
+    return render(request, 'BookAdd.html', {"form": form})
 
 
 def book_details(request, book_id):
-    return render(request, 'BookDetails.html')
+    book = bookData.objects.get(id=book_id)
+    return render(request, 'BookDetails.html', {'book': book})
 
 
 def book_edit(request, book_id):
-    return render(request, 'BookEdit.html')
+    book = bookData.objects.get(id=book_id)
+    if request.method == 'POST':
+        form=bookDataForm(request.POST, instance=book) # instance means prefilling data of user in form.
+        if form.is_valid():
+            form.save()
+            return redirect("book_table")
+    else:
+        form=bookDataForm(instance=book)
+    return render(request, 'BookEdit.html', {"form": form, "book": book})
 
 
 def book_delete(request, book_id):
-    return render(request, 'BookTable.html')
+    book = bookData.objects.get(id=book_id)
+    book.delete()   # delete from database
+    return redirect("book_table")
 
-
+#i_contains used for case-insensitive search
 def user_table(request):
+    name_search = request.GET.get("name")
+    email_search = request.GET.get("email")
     users = userData.objects.all()
-    return render(request, 'UserTable.html', {'users': users})
+    if name_search or email_search:
+        users = users.filter(
+            Q(full_name__icontains=name_search) | Q(email__icontains=email_search)
+        )
+    # with matching fullname or email 
+    return render(request, "UserTable.html", {"users": users, "name_search": name_search, "email_search": email_search})
 
 
 def user_add(request):
@@ -46,21 +74,33 @@ def user_add(request):
         form=userDataForm(request.POST)
         if form.is_valid(): 
             form.save() # saves the data into the database
-            # auto converts the data to required types
             return redirect("user_table")
         else: 
-            return render(request, 'UserAdd.html', {"form":form})
+            return render(request, 'UserAdd.html', {"form":form})   # idk how {"form":form} works
     return render(request, 'UserAdd.html')
 
 
 def user_details(request, user_id):
-    return render(request, 'UserDetails.html')
+    user=userData.objects.get(id=user_id)
+    return render(request, 'UserDetails.html', {"user": user})
+
 
 def user_edit(request, user_id):
-    return render(request, 'UserEdit.html')
+    user=userData.objects.get(id=user_id)
+    if request.method == 'POST':
+        form=userDataForm(request.POST, instance=user)  # instance means prefilling data of user in form.
+        if form.is_valid():
+            form.save()
+            return redirect("user_table")
+    else:
+        form=userDataForm(instance=user)
+    return render(request, 'UserEdit.html', {"form": form, "user": user})
+
 
 def user_delete(request, user_id):
-    return render(request, 'UserTable.html')
+    user = userData.objects.get(id=user_id)
+    user.delete()   # delete from database
+    return redirect("user_table")
 
 
 def records_open(request):
