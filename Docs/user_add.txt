@@ -5,6 +5,7 @@
 1. request is an dictionary, we are using .get("label") to get the data
 2. we change the form.py 
 2. userdataform 
+
 3. cleaned_data is the data which has been validated & cleaned using is_vlid() method. It's dict with all the form fields and thier values, like requests.POST.
 4. ValidationError is django's way of saying invalid field, catched during is_valid() check
 5. is_valid() runs the validation routine:

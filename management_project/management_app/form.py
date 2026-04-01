@@ -34,9 +34,13 @@ class userDataForm(forms.ModelForm):
 
     def clean_phone_no(self):
         phone_no = self.cleaned_data.get('phone_no')
+
         if (not phone_no) or (not phone_no.isdigit()) or (len(phone_no) != 10) or (phone_no.startswith('0')):
             raise forms.ValidationError("Phone Number must be 10 digits")
+        if phone_no and userData.objects.filter(phone_no=phone_no).exclude(pk=self.instance.pk).exists():
+            raise forms.ValidationError("Phone Number already exists")
         return phone_no
+
     
     def clean_address(self):
         address = self.cleaned_data.get('address')
@@ -82,6 +86,8 @@ class issueBookForm(forms.ModelForm):
         user = self.cleaned_data.get('user')
         if not user:
             raise ValidationError("Please select a User")
+        if issueBookData.objects.filter(user=user, status='issued').exists():
+            raise ValidationError("User already has an unreturned book.")
         return user
 
     def clean_book(self):
@@ -97,3 +103,9 @@ class issueBookForm(forms.ModelForm):
         if not due_date:
             raise ValidationError("Please enter Due Date")
         return due_date 
+    
+    # def clean_author_name(self):
+        
+    #     if not author:
+    #         raise ValidationError("Please select Author")
+    #     return author

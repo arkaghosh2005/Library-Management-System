@@ -104,22 +104,71 @@ def user_delete(request, user_id):
 
 
 def records_open(request):
-    records=issueBookData.objects.filter(status='issued')
-    return render(request, 'RecordsOpen.html', {"records": records})
+    search_query = request.GET.get("search", "").strip()
+    date_from = request.GET.get("date_from", "").strip()
+    date_to = request.GET.get("date_to", "").strip()
+
+    records = issueBookData.objects.filter(status='issued').select_related('user', 'book')
+
+    if search_query:
+        records = records.filter(
+            Q(user__full_name__icontains=search_query)
+            | Q(user__email__icontains=search_query)
+            | Q(book__book_name__icontains=search_query)
+            | Q(book__author_name__icontains=search_query)
+        )
+        return render(request, 'RecordsOpen.html', {"records": records, "search_query": search_query})
+    if date_from and date_to:
+        records = records.filter(Q(issue_date__gte=date_from) & Q(due_date__lte=date_to))
+        return render(request, 'RecordsOpen.html', {"records": records, "date_from": date_from, "date_to": date_to})
+
+    return render(
+        request, 'RecordsOpen.html', {"records": records},
+    )
 
 
 def records_closed(request):
-    return render(request, 'RecordsClosed.html')
+    search_query = request.GET.get("search", "").strip()
+    date_from = request.GET.get("date_from", "").strip()
+    date_to = request.GET.get("date_to", "").strip()
+
+    records = issueBookData.objects.filter(status='returned').select_related('user', 'book')
+
+    if search_query:
+        records = records.filter(
+            Q(user__full_name__icontains=search_query)
+            | Q(user__email__icontains=search_query)
+            | Q(book__book_name__icontains=search_query)
+            | Q(book__author_name__icontains=search_query)
+        )
+
+    if date_from:
+        records = records.filter(return_date__gte=date_from)
+
+    if date_to:
+        records = records.filter(return_date__lte=date_to)
+
+    return render(
+        request,
+        'RecordsClosed.html',
+        {
+            "records": records,
+            "search_query": search_query,
+            "date_from": date_from,
+            "date_to": date_to,
+        },
+    )
 
 
 def records_borrow(request):
-    user=userData.objects.all()
-    book=bookData.objects.all() # filter(available__gt=0) # only show books with available copies > 0
+    user = userData.objects.exclude(issuebookdata__status='issued').distinct()
+    book = bookData.objects.filter(available__gt=0)
     if request.method == 'POST':
         form = issueBookForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect("records_open")
         else:
-            return render(request, 'RecordsBorrowBook.html', {"form":form})
-    return render(request, 'RecordsBorrowBook.html',{"users": user, "books": book})
+            return render(request, 'RecordsBorrowBook.html', {"form": form, "users": user, "books": book})
+    form = issueBookForm()
+    return render(request, 'RecordsBorrowBook.html', {"form": form, "users": user, "books": book})

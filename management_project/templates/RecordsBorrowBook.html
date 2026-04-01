@@ -300,8 +300,8 @@
 						{% csrf_token %}
 
 						<div class="form-group">
-							<label for="user_id">Select User</label>
-							<select id="user_id" name="user_id" class="form-control" required>
+							<label for="user">Select User</label>
+							<select id="user" name="user" class="form-control" required>
 								<option value="">Choose a user</option>
 								{% for user in users %}
 								<option value="{{ user.id }}">{{ user.full_name }} ({{ user.email }})</option>
@@ -313,11 +313,11 @@
 						</div>
 
 						<div class="form-group">
-							<label for="book_id">Select Book</label>
-							<select id="book_id" name="book_id" class="form-control" required>
+							<label for="book">Select Book</label>
+							<select id="book" name="book" class="form-control" required>
 								<option value="">Choose a book</option>
 								{% for book in books %}
-								<option value="{{ book.id }}">{{ book.book_name }} by {{ book.author }}</option>
+								<option value="{{ book.id }}">{{ book.book_name }} by {{ book.author_name }}</option>
 								{% empty %}
 								<option value="">No books available</option>
 								{% endfor %}

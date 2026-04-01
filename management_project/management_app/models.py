@@ -23,8 +23,8 @@ class userData(models.Model):
     address = models.TextField(blank=True, null=True)
     
 class bookData(models.Model):
-    book_name = models.CharField(max_length=200)
-    author_name = models.CharField(max_length=150)
+    book_name = models.CharField(max_length=200, null=False)
+    author_name = models.CharField(max_length=150, null=False)
     book_type = models.CharField(max_length=20, choices=BOOK_TYPE, null=False)
     stock = models.PositiveIntegerField(default=0)
     available = models.PositiveIntegerField(default=0)
