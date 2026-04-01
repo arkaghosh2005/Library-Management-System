@@ -313,9 +313,9 @@
                         <div class="form-group">
                             <label for="user">Select User</label>
                             <select id="user" name="user" class="form-control" required>
-                                <option value="" disabled selected>Choose a User</option>
+                                <option value="" disabled {% if not form.user.value and not preselected_user %}selected{% endif %}>Choose a User</option>
                                 {% for user in users %}
-                                <option value="{{ user.id }}">{{ user.full_name }} ({{ user.email }})</option>
+                                <option value="{{ user.id }}" {% if form.user.value|stringformat:"i" == user.id|stringformat:"i" %}selected{% elif user.id|stringformat:"i" == preselected_user %}selected{% endif %}>{{ user.full_name }} ({{ user.email }})</option>
                                 {% empty %}
                                 <option value="" disabled>No users available</option>
                                 {% endfor %}
@@ -331,9 +331,9 @@
                         <div class="form-group">
                             <label for="book">Select Book</label>
                             <select id="book" name="book" class="form-control" required>
-                                <option value="" disabled selected>Choose a Book</option>
+                                <option value="" disabled {% if not form.book.value %}selected{% endif %}>Choose a Book</option>
                                 {% for book in books %}
-                                <option value="{{ book.id }}">{{ book.book_name }} by {{ book.author_name }}</option>
+                                <option value="{{ book.id }}" {% if form.book.value|stringformat:"i" == book.id|stringformat:"i" %}selected{% endif %}>{{ book.book_name }} by {{ book.author_name }}</option>
                                 {% empty %}
                                 <option value="" disabled>No books available</option>
                                 {% endfor %}
@@ -347,6 +347,11 @@
                         </div>
 
                         <div class="form-row">
+                            <div class="form-group">
+                                <label for="loan_days">Days from Today</label>
+                                <input type="number" id="loan_days" class="form-control"
+                                    value="14" min="1" max="365" placeholder="e.g. 14">
+                            </div>
                             <div class="form-group">
                                 <label for="due_date">Due Date</label>
                                 <input type="date" id="due_date" name="due_date" class="form-control"
@@ -385,6 +390,60 @@
             </div>
         </div>
     </main>
+
+    <script>
+        // Bidirectional sync: days ↔ date picker
+        const daysInput = document.getElementById('loan_days');
+        const dateInput = document.getElementById('due_date');
+
+        function addDays(baseDate, days) {
+            const d = new Date(baseDate);
+            d.setDate(d.getDate() + days);
+            return d;
+        }
+
+        // Format Date to YYYY-MM-DD for the date input
+        function formatDate(d) {
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return year + '-' + month + '-' + day;
+        }
+
+        function todayStr() {
+            return formatDate(new Date());
+        }
+
+        // When days input changes → update date picker
+        daysInput.addEventListener('input', function () {
+            const days = parseInt(this.value, 10);
+            if (days > 0) {
+                dateInput.value = formatDate(addDays(new Date(), days));
+            }
+        });
+
+        // When date picker changes → update days input
+        dateInput.addEventListener('input', function () {
+            if (this.value) {
+                // Parse as local date (YYYY-MM-DD)
+                const parts = this.value.split('-');
+                const picked = new Date(parts[0], parts[1] - 1, parts[2]);
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const diff = Math.round((picked - today) / (1000 * 60 * 60 * 24));
+                daysInput.value = diff > 0 ? diff : '';
+            }
+        });
+
+        // On page load: if date is already filled, sync days; otherwise fill from days
+        (function init() {
+            if (dateInput.value) {
+                dateInput.dispatchEvent(new Event('input'));
+            } else {
+                daysInput.dispatchEvent(new Event('input'));
+            }
+        })();
+    </script>
 </body>
 
 </html>

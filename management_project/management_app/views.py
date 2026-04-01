@@ -23,9 +23,22 @@ def dashboard(request):
     
 
 def book_table(request):
-    # TODO: search and filter functionality
+    search_query = request.GET.get("search", "").strip()
+    type_filter = request.GET.get("type", "").strip()
     books = bookData.objects.all().order_by('-id')
-    return render(request, 'BookTable.html', {'books': books})
+    if search_query:
+        books = books.filter(
+            Q(book_name__icontains=search_query)
+            | Q(author_name__icontains=search_query)
+        )
+    if type_filter:
+        books = books.filter(book_type=type_filter)
+    return render(request, 'BookTable.html', {
+        'books': books, 
+        'search_query': search_query, 
+        'type_filter': type_filter,
+        'book_types': BOOK_TYPE,  # from models.py, drives the dropdown
+    })
 
 
 def book_add(request):
@@ -73,15 +86,17 @@ def book_delete(request, book_id):
 
 #i_contains used for case-insensitive search
 def user_table(request):
-    name_search = request.GET.get("name")
-    email_search = request.GET.get("email")
+    search_query = request.GET.get("search", "").strip()
     users = userData.objects.all().order_by('-id')
-    if name_search or email_search:
+    if search_query:
         users = users.filter(
-            Q(full_name__icontains=name_search) | Q(email__icontains=email_search)
+            Q(full_name__icontains=search_query) 
+            | Q(email__icontains=search_query)
+            | Q(phone_no__icontains=search_query)
+            | Q(address__icontains=search_query)
         )
-    # with matching fullname or email 
-    return render(request, "UserTable.html", {"users": users, "name_search": name_search, "email_search": email_search})
+    # with matching fullname or email or phone or address
+    return render(request, "UserTable.html", {"users": users, "search_query": search_query})
 
 
 def user_add(request):
@@ -198,6 +213,7 @@ def records_closed(request):
 def records_borrow(request):
     user = userData.objects.exclude(issuebookdata__status='issued') # __ is used to access related fields in Django ORM.
     book = bookData.objects.filter(available__gt=0) # available__gt=0 means available greater than 0
+    preselected_user = request.GET.get('user', '')  # from UserDetails "Issue Book" link
     if request.method == 'POST':
         form = issueBookForm(request.POST)
         if form.is_valid():
@@ -206,9 +222,9 @@ def records_borrow(request):
             issue.book.save(update_fields=['available'])
             return redirect("records_open")
         else:
-            return render(request, 'RecordsBorrowBook.html', {"form": form, "users": user, "books": book})
+            return render(request, 'RecordsBorrowBook.html', {"form": form, "users": user, "books": book, "preselected_user": preselected_user})
     form = issueBookForm()
-    return render(request, 'RecordsBorrowBook.html', {"form": form, "users": user, "books": book})
+    return render(request, 'RecordsBorrowBook.html', {"form": form, "users": user, "books": book, "preselected_user": preselected_user})
 
 
 def return_book(request, record_id):

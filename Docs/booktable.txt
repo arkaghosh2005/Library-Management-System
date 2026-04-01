@@ -1,2 +1,4 @@
 available was confilcting
 so no template input, in model.py, takes default from stock.
+
+to get due_date in borrow used js

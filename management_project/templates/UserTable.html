@@ -60,6 +60,17 @@
             background: #1e3f66;
         }
 
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #666;
+            border: 1px solid #d0d0d0;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+            color: #1a1a1a;
+        }
+
         .btn span {
             margin-right: 8px;
         }
@@ -310,14 +321,11 @@
 
         <form method="GET" action="{% url 'user_table' %}" class="search-filter">
             <div class="search-box">
-                <input type="text" name="name" placeholder="Search by name" value="{{ name_query|default:'' }}">
-            </div>
-
-            <div class="search-box">
-                <input type="text" name="email" placeholder="Search by email" value="{{ email_query|default:'' }}">
+                <input type="text" name="search" placeholder="Search by name, email, phone, address..." value="{{ search_query|default:'' }}">
             </div>
 
             <button type="submit" class="btn btn-primary">Search</button>
+            <a href="{% url 'user_table' %}" class="btn btn-secondary">Clear Filters</a>
         </form>
 
         <div class="card">
