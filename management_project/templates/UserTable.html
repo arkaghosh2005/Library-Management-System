@@ -10,50 +10,54 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
         }
 
         body {
-            background: #f5f6fa;
+            background: #fafafa;
             min-height: 100vh;
+            color: #1a1a1a;
         }
 
         .main-content {
-            margin-left: 250px;
-            padding: 30px;
+            margin-left: 260px;
+            padding: 40px 30px;
         }
 
         .page-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
         }
 
         .page-header h1 {
-            color: #2c3e50;
-            font-size: 1.8rem;
+            color: #1a1a1a;
+            font-size: 2rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
         }
 
         .btn {
             padding: 12px 24px;
             border: none;
-            border-radius: 8px;
-            font-size: 0.95rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
             cursor: pointer;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
+            font-weight: 500;
         }
 
         .btn-primary {
-            background: #2ecc71;
+            background: #2c5aa0;
             color: #fff;
         }
 
         .btn-primary:hover {
-            background: #27ae60;
+            background: #1e3f66;
         }
 
         .btn span {
@@ -62,8 +66,8 @@
 
         .search-filter {
             display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
+            gap: 16px;
+            margin-bottom: 24px;
         }
 
         .search-box {
@@ -73,31 +77,35 @@
 
         .search-box input {
             width: 100%;
-            padding: 12px 20px 12px 45px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 0.95rem;
+            padding: 12px 14px 12px 40px;
+            border: 1px solid #d0d0d0;
+            border-radius: 6px;
+            font-size: 0.9rem;
             outline: none;
-            transition: border-color 0.3s ease;
+            transition: border-color 0.2s ease;
+            font-family: inherit;
         }
 
         .search-box input:focus {
-            border-color: #2ecc71;
+            border-color: #2c5aa0;
+            box-shadow: 0 0 0 3px rgba(44, 90, 160, 0.1);
         }
 
         .search-box::before {
-            content: "🔍";
+            content: "⌕";
             position: absolute;
-            left: 15px;
+            left: 14px;
             top: 50%;
             transform: translateY(-50%);
+            color: #999;
+            font-weight: 600;
         }
 
         .filter-select {
-            padding: 12px 20px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 0.95rem;
+            padding: 12px 14px;
+            border: 1px solid #d0d0d0;
+            border-radius: 6px;
+            font-size: 0.9rem;
             outline: none;
             background: #fff;
             min-width: 150px;
@@ -294,7 +302,7 @@
 
     <main class="main-content">
         <div class="page-header">
-            <h1>👥 All Users</h1>
+            <h1>All Users</h1>
             <a href="{% url 'user_add' %}" class="btn btn-primary">
                 <span>➕</span> Add New User
             </a>
@@ -343,7 +351,7 @@
                     <tr>
                         <td colspan="5">
                             <div class="empty-state">
-                                <span>👥</span>
+                                <span>+</span>
                                 <h3>No Users Found</h3>
                                 <p>Start by registering your first library user.</p>
                             </div>
