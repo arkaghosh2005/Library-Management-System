@@ -1,6 +1,7 @@
 from django import forms
 from django.core.exceptions import ValidationError 
 from .models import *
+import datetime
 
 # cleaned_data is validated&cleaned data using is_valid()
 # if errors are found at any time, then they are stored in forms.errors
@@ -51,7 +52,9 @@ class bookDataForm(forms.ModelForm):
     def clean_book_name(self):
         book_name = self.cleaned_data.get('book_name')  
         if not book_name:
-            raise ValidationError("Please enter Book Name") 
+            raise ValidationError("Please enter Book Name")
+        # elif bookData.objects.filter(book_name=book_name).exclude(pk=self.instance.pk).exists():
+        #     raise ValidationError("Book with this name already exists") 
         return book_name
     def clean_author_name(self):
         author_name= self.cleaned_data.get('author_name')
@@ -70,4 +73,27 @@ class bookDataForm(forms.ModelForm):
             raise ValidationError("Stock must be a non-negative integer")
         return stock
     
+class issueBookForm(forms.ModelForm):
+    class Meta:
+        model = issueBookData
+        fields = ['user', 'book', 'due_date']
+
+    def clean_user(self):
+        user = self.cleaned_data.get('user')
+        if not user:
+            raise ValidationError("Please select a User")
+        return user
+
+    def clean_book(self):
+        book = self.cleaned_data.get('book')
+        if not book:
+            raise ValidationError("Please select a Book")
+        if book.available <= 0:
+            raise ValidationError("Selected book is not available for issuing")
+        return book
     
+    def clean_due_date(self):
+        due_date = self.cleaned_data.get('due_date')
+        if not due_date:
+            raise ValidationError("Please enter Due Date")
+        return due_date 

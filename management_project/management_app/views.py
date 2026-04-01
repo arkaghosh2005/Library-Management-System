@@ -104,7 +104,8 @@ def user_delete(request, user_id):
 
 
 def records_open(request):
-    return render(request, 'RecordsOpen.html')
+    records=issueBookData.objects.filter(status='issued')
+    return render(request, 'RecordsOpen.html', {"records": records})
 
 
 def records_closed(request):
@@ -112,4 +113,13 @@ def records_closed(request):
 
 
 def records_borrow(request):
-    return render(request, 'RecordsBorrowBook.html')
+    user=userData.objects.all()
+    book=bookData.objects.all() # filter(available__gt=0) # only show books with available copies > 0
+    if request.method == 'POST':
+        form = issueBookForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("records_open")
+        else:
+            return render(request, 'RecordsBorrowBook.html', {"form":form})
+    return render(request, 'RecordsBorrowBook.html',{"users": user, "books": book})

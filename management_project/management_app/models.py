@@ -1,5 +1,5 @@
 from django.db import models
-from datetime import timedelta
+from datetime import date, timedelta
 
 # (database, frontend)
 ISSUE_STATUS = [
@@ -37,9 +37,8 @@ class bookData(models.Model):
 class issueBookData(models.Model):
     user = models.ForeignKey(userData, on_delete=models.CASCADE)
     book = models.ForeignKey(bookData, on_delete=models.CASCADE)
-    author = models.ForeignKey(bookData, on_delete=models.CASCADE, related_name='issued_book')
-    issue_date = models.DateField(auto_now_add=True)
-    due_date = models.DateField(default=None, blank=True, null=True)
+    issue_date = models.DateField(auto_now_add= True)
+    due_date = models.DateField(default=date.today() + timedelta(days=14), blank=True, null=True)
     return_date = models.DateField(blank=True, null=True)
     fine_amount = models.FloatField(default=0.00)
     status = models.CharField(max_length=20, choices=ISSUE_STATUS, default='issued')
