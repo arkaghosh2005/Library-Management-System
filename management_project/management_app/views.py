@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from django.db.models import Q  
 from django.utils import timezone
+from datetime import timedelta
 from .form import *
 from .models import *
 # Q allows building complex queries using logical operators like AND, OR, NOT, etc. It is used to filter data based on multiple conditions.
@@ -179,7 +180,9 @@ def records_borrow(request):
     if request.method == 'POST':
         form = issueBookForm(request.POST)
         if form.is_valid():
-            form.save()
+            issue = form.save()
+            issue.book.available -= 1
+            issue.book.save(update_fields=['available'])
             return redirect("records_open")
         else:
             return render(request, 'RecordsBorrowBook.html', {"form": form, "users": user, "books": book})
@@ -193,8 +196,22 @@ def return_book(request, record_id):
     if record.status == 'issued':
         record.status = 'returned'
         record.return_date = timezone.now()
+        # Calculate fine if returned after due date
+        overdue_days = (record.return_date.date() - record.due_date).days
+        if overdue_days > 0:
+            record.fine_amount = overdue_days * FINE_PER_DAY
         record.book.available += 1  
         record.book.save(update_fields=['available'])   
-        record.save(update_fields=['status', 'return_date'])
+        record.save(update_fields=['status', 'return_date', 'fine_amount'])
     # update_fields-> only change these in database
+    return redirect('records_open')
+
+
+def reissue_book(request, record_id):
+    record = get_object_or_404(issueBookData, id=record_id)
+    if record.status == 'issued':
+        today = timezone.now().date()
+        record.issue_date = today
+        record.due_date = today + timedelta(days=14)
+        record.save(update_fields=['issue_date', 'due_date'])
     return redirect('records_open')

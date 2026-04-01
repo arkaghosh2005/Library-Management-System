@@ -1,6 +1,8 @@
 from django.db import models
 from datetime import date, timedelta
 
+FINE_PER_DAY = 5  # Rs. 5 per day
+
 # (database, frontend)
 ISSUE_STATUS = [
     ('issued', 'Issued'),  
@@ -34,8 +36,14 @@ class bookData(models.Model):
     available = models.PositiveIntegerField(default=0)
 
     def save(self, *args, **kwargs):
-        if self._state.adding and self.available == 0:  #_state.adding is true when new instance, then false 
+        if self._state.adding:
+            # New book: available = stock
             self.available = self.stock
+        else:
+            # Editing existing book: adjust available by the stock difference
+            old = bookData.objects.get(pk=self.pk)
+            stock_diff = self.stock - old.stock
+            self.available = max(self.available + stock_diff, 0)
         super().save(*args, **kwargs)
 
 class issueBookData(models.Model):
@@ -46,3 +54,10 @@ class issueBookData(models.Model):
     return_date = models.DateTimeField(blank=True, null=True)
     fine_amount = models.FloatField(default=0.00)
     status = models.CharField(max_length=20, choices=ISSUE_STATUS, default='issued')
+
+    @property
+    def current_fine(self):
+        if self.status == 'issued':
+            overdue_days = (date.today() - self.due_date).days
+            return max(overdue_days * FINE_PER_DAY, 0)
+        return self.fine_amount

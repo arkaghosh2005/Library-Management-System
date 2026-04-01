@@ -20,4 +20,5 @@ urlpatterns = [
     path('records/closed/', views.records_closed, name='records_closed'),
     path('records/borrow/', views.records_borrow, name='records_borrow'),
     path('return/<int:record_id>/', views.return_book, name='return_book'),
+    path('reissue/<int:record_id>/', views.reissue_book, name='reissue_book'),
 ]
